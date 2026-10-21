@@ -1,0 +1,17 @@
+{
+  "name": "local-webcam-eye-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test",
+    "check": "node --check server.js && node --check src/calibration.js && node --check src/app.js && node --check src/bootstrap.js"
+  },
+  "dependencies": {
+    "@mediapipe/face_mesh": "0.4.1633559619"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0"
+  }
+}

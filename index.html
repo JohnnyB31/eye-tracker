@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0b1020">
+    <meta name="description" content="A private, local webcam eye-tracking demo. No video leaves your device.">
+    <title>Gaze — local eye tracker</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/node_modules/@mediapipe/face_mesh/face_mesh.js"></script>
+    <script type="module" src="/src/bootstrap.js"></script>
+  </head>
+  <body>
+    <div class="app-shell" id="app-root" data-state="idle">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="Gaze home">
+          <span class="brand-mark" aria-hidden="true"><span></span></span>
+          <span>gaze<span class="brand-period">.</span></span>
+        </a>
+        <div class="topbar-right">
+          <span class="privacy-chip"><span class="privacy-dot" aria-hidden="true"></span> Local-only tracking</span>
+          <button class="button button-quiet fullscreen-top" id="fullscreen-toggle" type="button" aria-pressed="false">
+            <span aria-hidden="true">⛶</span> Fullscreen
+          </button>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <section class="intro-row" aria-labelledby="page-title">
+          <div>
+            <p class="eyebrow">WEBCAM EYE TRACKING · EXPERIMENTAL</p>
+            <h1 id="page-title">See where your eyes <em>land.</em></h1>
+            <p class="intro-copy">A private, on-device gaze estimate. Calibrate once per session, then watch the light follow your focus.</p>
+          </div>
+          <div class="intro-note">
+            <span class="note-icon" aria-hidden="true">◎</span>
+            <p>Approximate by design.<br><strong>Not for assistive or medical use.</strong></p>
+          </div>
+        </section>
+
+        <section class="tracker-card" aria-label="Eye tracking controls">
+          <div class="control-row">
+            <div class="camera-control">
+              <label class="field-label" for="camera-select">CAMERA</label>
+              <select id="camera-select" aria-label="Select webcam">
+                <option value="">Default camera</option>
+              </select>
+            </div>
+            <div class="button-group">
+              <button class="button button-primary" id="start-camera" type="button">
+                <span class="button-icon" aria-hidden="true">◉</span> Start camera
+              </button>
+              <button class="button button-secondary" id="begin-calibration" type="button" disabled>
+                Calibrate gaze
+              </button>
+              <button class="button button-secondary" id="recalibrate" type="button" hidden>
+                Recalibrate
+              </button>
+              <button class="button button-stop" id="stop-camera" type="button" disabled>
+                Stop
+              </button>
+              <button class="button button-quiet fullscreen-exit" id="fullscreen-exit" type="button" hidden>Exit fullscreen</button>
+            </div>
+            <video id="camera-preview" class="camera-preview" autoplay muted playsinline hidden aria-label="Local camera preview"></video>
+          </div>
+
+          <div class="tracking-surface" id="tracking-surface" aria-label="Gaze tracking area">
+            <div class="surface-grid" aria-hidden="true"></div>
+            <div class="surface-corner surface-corner-top" aria-hidden="true"></div>
+            <div class="surface-corner surface-corner-bottom" aria-hidden="true"></div>
+            <div class="surface-label" id="surface-label">TRACKING AREA <span>· APP ONLY</span></div>
+            <div class="empty-state" id="empty-state">
+              <div class="eye-illustration" aria-hidden="true"><span></span></div>
+              <p class="empty-title">Your gaze map starts here</p>
+              <p class="empty-copy">Start the camera, settle into frame, and complete the nine-point calibration.</p>
+            </div>
+            <div class="calibration-target" id="calibration-target" hidden aria-hidden="true">
+              <span></span>
+            </div>
+            <div class="gaze-marker" id="gaze-marker" hidden aria-hidden="true"><span></span></div>
+            <div class="face-warning" id="face-warning" hidden role="status">Face not detected — center your face in the camera.</div>
+            <div class="calibration-banner" id="calibration-banner" hidden>
+              <span id="calibration-step" aria-live="polite">Target 1 of 9</span>
+              <span>Hold your gaze on the glowing point</span>
+            </div>
+          </div>
+
+          <div class="status-row">
+            <div class="status-copy">
+              <span class="status-indicator" id="status-indicator" aria-hidden="true"></span>
+              <p id="status-message" role="status" aria-live="polite">Camera is off. Start the camera to begin.</p>
+            </div>
+            <progress id="calibration-progress" class="calibration-progress" value="0" max="9" aria-label="Calibration progress" hidden></progress>
+          </div>
+        </section>
+
+        <footer class="bottom-notes">
+          <p><span class="footer-icon" aria-hidden="true">⌁</span> Frames stay on this device. Nothing is recorded or sent online.</p>
+          <p>Best with a steady camera, even light, and your face clearly in view.</p>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>
